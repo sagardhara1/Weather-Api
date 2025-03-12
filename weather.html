@@ -1,0 +1,97 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 50px;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 12px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            width: 250px;
+            outline: none;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            background: yellow;
+            color: black;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #ffd700;
+        }
+        #weather {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌦️ Weather </h1>
+    <input type="text" id="location" placeholder="Enter location">
+    <button onclick="getWeather()">Get Weather</button>
+    <div id="weather"></div>
+
+    <script>
+        function getWeather() {
+            const location = document.getElementById("location").value.trim();
+            const weatherDiv = document.getElementById("weather");
+            
+            if (!location) {
+                weatherDiv.innerHTML = "Please enter a location.";
+                return;
+            }
+            
+            weatherDiv.innerHTML = "Loading...";
+            const apiKey = "1083e2618cd64b29b8f114911250903";
+            const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+            
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Invalid location");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    weatherDiv.innerHTML = 
+                        `<p>🌍 Location: <strong>${data.location.name}, ${data.location.country}</strong></p>
+                         <p>🌡️ Temperature: <strong>${data.current.temp_c}°C</strong></p>
+                         <p>💨 Wind Speed: <strong>${data.current.wind_kph} kph</strong></p>
+                         <p>🌫️ Condition: <strong>${data.current.condition.text}</strong></p>`;
+                })
+                .catch(error => {
+                    weatherDiv.innerHTML = "Error fetching weather data. Please try again.";
+                });
+        }
+    </script>
+</body>
+</html>
